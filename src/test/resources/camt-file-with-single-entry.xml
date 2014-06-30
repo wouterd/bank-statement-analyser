@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02">
+  <BkToCstmrStmt>
+    <Stmt>
+      <Id>0479741549.2014-04-01</Id>
+      <Ntry>
+        <Amt Ccy="EUR">000000000000016.51</Amt>
+        <CdtDbtInd>DBIT</CdtDbtInd>
+        <Sts>BOOK</Sts>
+        <BookgDt>
+          <Dt>2014-04-01</Dt>
+        </BookgDt>
+        <ValDt>
+          <Dt>2014-04-01</Dt>
+        </ValDt>
+        <AcctSvcrRef>GT025003442232800AE</AcctSvcrRef>
+        <BkTxCd>
+          <Domn>
+            <Cd>PMNT</Cd>
+            <Fmly>
+              <Cd>RDDT</Cd>
+              <SubFmlyCd>ESDD</SubFmlyCd>
+            </Fmly>
+          </Domn>
+          <Prtry>
+            <Cd>N247</Cd>
+            <Issr>ABNAMRO</Issr>
+          </Prtry>
+        </BkTxCd>
+        <NtryDtls>
+          <TxDtls>
+            <Refs>
+              <AcctSvcrRef>GT025003442232800AE</AcctSvcrRef>
+              <EndToEndId>1011869289379713</EndToEndId>
+              <MndtId>FLVZ356201306081642056780002</MndtId>
+            </Refs>
+            <AmtDtls>
+              <TxAmt>
+                <Amt Ccy="EUR">000000000000016.51</Amt>
+              </TxAmt>
+            </AmtDtls>
+            <RltdPties>
+              <Cdtr>
+                <Nm>FLORIUS</Nm>
+                <PstlAdr>
+                  <Ctry>NL</Ctry>
+                  <AdrLine>RUIMTEVAART 24</AdrLine>
+                  <AdrLine>3824 MX AMERSFOORT</AdrLine>
+                </PstlAdr>
+                <Id>
+                  <PrvtId>
+                    <Othr>
+                      <Id>NL42ZZZ080242850000</Id>
+                      <SchmeNm>
+                        <Prtry>SEPA</Prtry>
+                      </SchmeNm>
+                    </Othr>
+                  </PrvtId>
+                </Id>
+              </Cdtr>
+              <CdtrAcct>
+                <Id>
+                  <IBAN>NL10ABNA0499351045</IBAN>
+                </Id>
+              </CdtrAcct>
+            </RltdPties>
+            <RltdAgts>
+              <DbtrAgt>
+                <FinInstnId>
+                  <BIC>ABNANL2A</BIC>
+                </FinInstnId>
+              </DbtrAgt>
+              <CdtrAgt>
+                <FinInstnId>
+                  <BIC>ABNANL2A</BIC>
+                </FinInstnId>
+              </CdtrAgt>
+            </RltdAgts>
+            <RmtInf>
+              <Ustrd>Kenmerk 1011.8692.8937.9713 Omschrijving PREMIE PER 01-04-2014 1 MND 58515223 Overlijdensrisico incasso</Ustrd>
+            </RmtInf>
+          </TxDtls>
+        </NtryDtls>
+        <AddtlNtryInf>/TRTP/SEPA Incasso algemeen doorlopend/CSID/NL42ZZZ080242850000 /NAME/Florius, Verzekeringen/MARF/FLVZ356201306081642056780002 /REMI/Kenmerk 1011.8692.8937.9713 Omschrijving PREMIE PER 01-04-2014 1 MND 58515223 Overlijdensrisico incasso/IBAN/NL10ABNA0499351045/BIC/ABNANL2A/EREF/1011869289379713</AddtlNtryInf>
+      </Ntry>
+    </Stmt>
+  </BkToCstmrStmt>
+</Document>

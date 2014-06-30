@@ -1,0 +1,31 @@
+buildscript {
+  repositories {
+    jcenter()
+  }
+  dependencies {
+    classpath 'io.ratpack:ratpack-gradle:0.9.5'
+  }
+}
+
+apply plugin: 'ratpack-groovy'
+apply plugin: 'idea'
+
+repositories {
+  jcenter()
+  maven { url 'http://repo.springsource.org/repo' } // for springloaded
+  mavenCentral()
+}
+
+dependencies {
+  springloaded 'org.springsource.loaded:springloaded:1.1.5.RELEASE'
+
+  compile group: 'com.gmongo', name: 'gmongo', version: '1.3'
+
+  testCompile 'org.spockframework:spock-core:0.7-groovy-2.0'
+  testCompile group: 'org.hamcrest', name: 'hamcrest-all', version: '1.3'
+  testCompile group: 'de.flapdoodle.embed', name: 'de.flapdoodle.embed.mongo', version: '1.46.0'
+}
+
+run {
+  systemProperty 'ratpack.port', '1234'
+}
