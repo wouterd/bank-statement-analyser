@@ -5,6 +5,7 @@ import com.mongodb.DBObject
 import com.mongodb.util.JSON
 import org.bson.types.ObjectId
 import ratpack.groovy.handling.GroovyChainAction
+
 /**
  * Created by wouter on 28-06-14.
  */
@@ -21,17 +22,19 @@ class TransactionsChain extends GroovyChainAction {
   @Override
   protected void execute() throws Exception {
 
-    get('untagged') {
-      def transaction = db.transactions.findOne(
-              new BasicDBObject(['tag': ['$exists': false]]),
-              new BasicDBObject(),
-              new BasicDBObject(['date': -1])
-      )
+    get 'untagged', {
+      blocking {
+        db.transactions.findOne(
+                new BasicDBObject(['tag': ['$exists': false]]),
+                new BasicDBObject(),
+                new BasicDBObject(['date': -1]))
+      } then { transaction ->
+        render JSON.serialize(transaction)
+      }
 
-      render JSON.serialize(transaction)
     }
 
-    handler(':id') {
+    handler ':id', {
       byMethod {
         get {
           def id = allPathTokens['id']
@@ -44,15 +47,16 @@ class TransactionsChain extends GroovyChainAction {
             return
           }
 
-          def transaction = db.transactions.findOne(new BasicDBObject('_id', new ObjectId(id)))
-
-          if (transaction == null) {
-            response.status 404
-            response.send "Transaction with ObjectId ${id} doesn't exist."
-            return
+          blocking {
+            db.transactions.findOne(new BasicDBObject('_id', new ObjectId(id)))
+          } then { transaction ->
+            if (transaction == null) {
+              response.status 404
+              response.send "Transaction with ID = '${id}' doesn't exist"
+              return
+            }
+            render JSON.serialize(transaction)
           }
-
-          render JSON.serialize(transaction)
         }
 
         put {
@@ -60,16 +64,18 @@ class TransactionsChain extends GroovyChainAction {
 
           def update = JSON.parse(request.body.text) as DBObject
 
-          def result = db.transactions.update(new BasicDBObject('_id', new ObjectId(id)), update)
+          blocking {
+            db.transactions.update(new BasicDBObject('_id', new ObjectId(id)), update)
+          } then { result ->
+            if (result.n == 0) {
+              response.status 404
+              response.send()
+              return
+            }
 
-          if (result.n == 0) {
-            response.status 404
-            response.send()
-            return
+            response.status 201
+            render 'Document updated'
           }
-
-          response.status 201
-          render 'Document updated'
         }
       }
     }
