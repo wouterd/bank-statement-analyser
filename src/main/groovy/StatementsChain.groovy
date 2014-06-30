@@ -21,36 +21,69 @@ class StatementsChain extends GroovyChainAction {
 
   @Override
   protected void execute() throws Exception {
+    /**
+     * Imports a new statement into the database
+     */
     post {
       def xmlStream = request.body.inputStream
       def xml = new XmlSlurper().parse(xmlStream)
       def statement = xml.BkToCstmrStmt.Stmt
       def statementId = statement.Id.text()
 
-      def find = db.statements.findOne(new BasicDBObject('_id', statementId))
-      def statementFound = find != null
+      blocking({
+        db.statements.findOne(new BasicDBObject('_id', statementId))
+      }).then({ find ->
+        def statementFound = find != null
 
-      if (statementFound) {
-        response.status(400)
-        response.send('Statement has already been imported')
-        return
-      }
+        if (statementFound) {
+          response.status(400)
+          response.send('Statement has already been imported')
+          return
+        }
 
-      def entries = statement.Ntry.collect { GPathResult ntry ->
-        [
-                stmtId     : statementId,
-                date       : new SimpleDateFormat('yyyy-mm-dd').parse(ntry.BookgDt.Dt.toString()),
-                amount     : ntry.Amt.toDouble(),
-                description: ntry.AddtlNtryInf.text(),
-                dbitOrCrdt : ntry.CdtDbtInd.text()
-        ]
-      }
+        blocking({
+          def entries = statement.Ntry.collect { GPathResult ntry ->
+            [
+                    stmtId     : statementId,
+                    date       : new SimpleDateFormat('yyyy-mm-dd').parse(ntry.BookgDt.Dt.toString()),
+                    amount     : ntry.Amt.toDouble(),
+                    description: ntry.AddtlNtryInf.text(),
+                    dbitOrCrdt : ntry.CdtDbtInd.text()
+            ]
+          }
 
-      db.transactions << entries
-      db.statements << ["_id": statementId, "imported": Calendar.instance.time]
+          db.transactions << entries
+          db.statements << ["_id": statementId, "imported": Calendar.instance.time]
+        }).then({
+          response.status 201
+          response.send()
+        })
+      })
+    }
 
-      response.status 201
-      response.send()
+    /**
+     * Deletes a statement and its related transactions
+     */
+    delete(':id') {
+      def stmtId = allPathTokens['id']
+
+      blocking({
+        db.statements.remove(new BasicDBObject('_id': stmtId))
+      }).then({ result ->
+        if (result.n == 0) {
+          println 'statement doesn\'t exist'
+          response.status 404
+          response.send("Statement '${stmtId}' doesn't exist.")
+          return
+        }
+
+        blocking({
+          db.transactions.remove(new BasicDBObject('stmtId': stmtId))
+        }).then({
+          response.status 200
+          response.send()
+        })
+      })
     }
   }
 
