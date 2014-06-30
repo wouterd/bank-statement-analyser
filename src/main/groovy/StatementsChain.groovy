@@ -5,7 +5,6 @@ import groovy.util.slurpersupport.GPathResult
 import ratpack.groovy.handling.GroovyChainAction
 
 import java.text.SimpleDateFormat
-
 /**
  * This micro service is responsible for importing bank statements into the database
  */
@@ -31,16 +30,14 @@ class StatementsChain extends GroovyChainAction {
       def statementId = statement.Id.text()
 
       blocking({
-        db.statements.findOne(new BasicDBObject('_id', statementId))
-      }).then({ find ->
-        def statementFound = find != null
-
-        if (statementFound) {
-          response.status(400)
-          response.send('Statement has already been imported')
-          return
+        def found = db.statements.findOne(new BasicDBObject('_id', statementId)) != null
+        if (found) {
+          throw new IllegalArgumentException("Statement with ID = ${statementId} already exists.")
         }
-
+      }).onError({ e ->
+        response.status 400
+        response.send e.message
+      }).then({
         blocking({
           def entries = statement.Ntry.collect { GPathResult ntry ->
             [
@@ -51,7 +48,6 @@ class StatementsChain extends GroovyChainAction {
                     dbitOrCrdt : ntry.CdtDbtInd.text()
             ]
           }
-
           db.transactions << entries
           db.statements << ["_id": statementId, "imported": Calendar.instance.time]
         }).then({
