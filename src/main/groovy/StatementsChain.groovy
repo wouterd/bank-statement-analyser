@@ -10,18 +10,17 @@ import java.text.SimpleDateFormat
  * This micro service is responsible for importing bank statements into the database
  */
 @com.google.inject.Singleton
-class ImportChain extends GroovyChainAction {
+class StatementsChain extends GroovyChainAction {
 
   final DB db
 
   @Inject
-  ImportChain(final DB db) {
+  StatementsChain(final DB db) {
     this.db = db
   }
 
   @Override
   protected void execute() throws Exception {
-
     post {
       def xmlStream = request.body.inputStream
       def xml = new XmlSlurper().parse(xmlStream)
@@ -42,7 +41,8 @@ class ImportChain extends GroovyChainAction {
                 stmtId     : statementId,
                 date       : new SimpleDateFormat('yyyy-mm-dd').parse(ntry.BookgDt.Dt.toString()),
                 amount     : ntry.Amt.toDouble(),
-                description: ntry.AddtlNtryInf.text()
+                description: ntry.AddtlNtryInf.text(),
+                dbitOrCrdt : ntry.CdtDbtInd.text()
         ]
       }
 

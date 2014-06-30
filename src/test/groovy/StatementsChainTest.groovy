@@ -2,7 +2,7 @@ import ratpack.test.handling.HandlingResult
 
 import static ratpack.test.UnitTest.handle
 
-class ImportChainTest extends MongoDependentSpecification {
+class StatementsChainTest extends MongoDependentSpecification {
 
   def 'Imports a bank statement into Mongo as Transactions'() {
     when:
@@ -29,7 +29,7 @@ class ImportChainTest extends MongoDependentSpecification {
   }
 
   private HandlingResult importCamtFileWithSingleEntry() {
-    def chain = new ImportChain(db)
+    def chain = new StatementsChain(db)
     handle(chain, {
       def input = getClass().getResourceAsStream '/camt-file-with-single-entry.xml'
       it.body(input.bytes, 'application/xml')

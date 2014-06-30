@@ -11,7 +11,7 @@ ratpack {
   }
 
   handlers {
-    prefix 'import', registry.get(ImportChain.class)
+    prefix 'statements', registry.get(StatementsChain.class)
     prefix 'transactions', registry.get(TransactionsChain.class)
   }
 }
