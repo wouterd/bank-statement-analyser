@@ -1,7 +1,7 @@
 import com.mongodb.BasicDBObject
 import ratpack.test.handling.HandlingResult
 
-import static ratpack.test.UnitTest.handle
+import static ratpack.groovy.test.GroovyUnitTest.handle
 
 class StatementsChainTest extends MongoDependentSpecification {
 
@@ -100,17 +100,17 @@ class StatementsChainTest extends MongoDependentSpecification {
   }
 
   private HandlingResult deleteStatement(String stmtId) {
-    handle(chain, {
-      it.method('delete')
-      it.uri(stmtId)
-    })
+    handle chain, {
+      method 'delete'
+      uri stmtId
+    }
   }
 
   private HandlingResult importCamtFileWithSingleEntry() {
-    handle(chain, {
+    handle chain, {
       def input = getClass().getResourceAsStream '/camt-file-with-single-entry.xml'
-      it.body(input.bytes, 'application/xml')
-      it.method('post')
-    })
+      body input.bytes, 'application/xml'
+      method 'post'
+    }
   }
 }
