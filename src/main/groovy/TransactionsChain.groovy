@@ -2,6 +2,8 @@ import com.google.inject.Inject
 import com.mongodb.BasicDBObject
 import com.mongodb.DB
 import com.mongodb.util.JSON
+import groovy.json.JsonException
+import groovy.json.JsonSlurper
 import ratpack.groovy.handling.GroovyChainAction
 
 /**
@@ -19,7 +21,6 @@ class TransactionsChain extends GroovyChainAction {
 
   @Override
   protected void execute() throws Exception {
-
     get 'untagged', {
       blocking {
         db.transactions.findOne(
@@ -35,8 +36,21 @@ class TransactionsChain extends GroovyChainAction {
           render JSON.serialize(transaction)
         }
       }
-
     }
-
+    put ':id/tag', {
+      def id = allPathTokens['id']
+      blocking {
+        def object = new JsonSlurper().parse(request.body.inputStream)
+        db.transactions.update new BasicDBObject([_id: id]), new BasicDBObject([$set: [tag: object['tag']]])
+      } onError { e ->
+        response.status e instanceof JsonException ? 400 : 500
+        response.send()
+      } then { result ->
+        if (result.n == 0) {
+          response.status 404, "Transaction with id = ${id} not found"
+        }
+        response.send()
+      }
+    }
   }
 }

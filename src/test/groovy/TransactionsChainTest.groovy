@@ -1,25 +1,36 @@
+import com.mongodb.util.JSON
 import groovy.json.JsonSlurper
 import ratpack.test.handling.HandlingResult
 
 import static ratpack.groovy.test.GroovyUnitTest.handle
 
 class TransactionsChainTest extends MongoDependentSpecification {
+  private TransactionsChain chain
+
+  @Override
+  void setup() {
+    chain = new TransactionsChain(db)
+  }
 
   def "Returns an untagged transaction"() {
-    when:
+    given:
     loadTestSetInDatabase()
 
+    when:
     def result = requestUntaggedTransaction()
 
     then:
     assert result.status.code == 200
     def object = new JsonSlurper().parse(result.rendered(String).toCharArray())
+    println object
     assert object['tag'] == null
   }
 
   def "Returns the most recent untagged transaction"() {
-    when:
+    given:
     loadTestSetInDatabase()
+
+    when:
     def result = requestUntaggedTransaction()
 
     then:
@@ -36,8 +47,55 @@ class TransactionsChainTest extends MongoDependentSpecification {
     assert result.status.code == 404
   }
 
+  def "Tags a given transaction"() {
+    given:
+    loadTestSetInDatabase()
+
+    when:
+    def result = handle chain, {
+      uri '2/tag'
+      body JSON.serialize([tag: 'leTag']), 'application/json'
+      method 'put'
+    }
+
+    then:
+    assert result.status.code == 200
+    assert db.transactions.findOne([_id: '2'])['tag'] == 'leTag'
+  }
+
+  def "Returns a 404 when trying to tag an nonexistent transaction"() {
+    given:
+    loadTestSetInDatabase()
+
+    when:
+    def result = handle chain, {
+      uri '5/tag'
+      body JSON.serialize([tag: 'a tag']), 'application/json'
+      method 'put'
+    }
+
+    then:
+    assert result.status.code == 404
+  }
+
+  def "Should return a Bad Request code when a non-json document passed"() {
+    when:
+    def result = handle(chain, {
+      uri '2/tag'
+      body 'something wrong', 'application/json'
+      method 'put'
+    })
+
+    then:
+    println result.status
+    println result.bodyText
+    println result.exception
+    println result.sentResponse
+    assert result.status.code == 400
+  }
+
   private HandlingResult requestUntaggedTransaction() {
-    handle new TransactionsChain(db), {
+    handle chain, {
       uri 'untagged'
       method 'get'
     }
@@ -45,10 +103,10 @@ class TransactionsChainTest extends MongoDependentSpecification {
 
   private void loadTestSetInDatabase() {
     db.transactions << [
-            [tag: 'someTag', date: new Date(2014, 04, 12)],
-            [dbitOrCrdt: 'DBIT', date: new Date(2013, 05, 06)],
-            [stmtId: 'abc', date: new Date(2014, 06, 12)],
-            [tag: 'tag!', date: new Date(2014, 03, 12)]
+            [_id: '1', tag: 'someTag', date: new Date(2014, 04, 12)],
+            [_id: '2', dbitOrCrdt: 'DBIT', date: new Date(2013, 05, 06)],
+            [_id: '3', stmtId: 'abc', date: new Date(2014, 06, 12)],
+            [_id: '4', tag: 'tag!', date: new Date(2014, 03, 12)]
     ]
   }
 }
