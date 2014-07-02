@@ -52,11 +52,7 @@ class TransactionsChainTest extends MongoDependentSpecification {
     loadTestSetInDatabase()
 
     when:
-    def result = handle chain, {
-      uri '2/tag'
-      body JSON.serialize([tag: 'leTag']), 'application/json'
-      method 'put'
-    }
+    def result = tagTransaction '2/tag', JSON.serialize([tag: 'leTag'])
 
     then:
     assert result.status.code == 200
@@ -68,11 +64,7 @@ class TransactionsChainTest extends MongoDependentSpecification {
     loadTestSetInDatabase()
 
     when:
-    def result = handle chain, {
-      uri '5/tag'
-      body JSON.serialize([tag: 'a tag']), 'application/json'
-      method 'put'
-    }
+    def result = tagTransaction '5/tag', JSON.serialize([tag: 'a tag'])
 
     then:
     assert result.status.code == 404
@@ -80,17 +72,9 @@ class TransactionsChainTest extends MongoDependentSpecification {
 
   def "Should return a Bad Request code when a non-json document passed"() {
     when:
-    def result = handle(chain, {
-      uri '2/tag'
-      body 'something wrong', 'application/json'
-      method 'put'
-    })
+    def result = tagTransaction '2/tag', 'something wrong'
 
     then:
-    println result.status
-    println result.bodyText
-    println result.exception
-    println result.sentResponse
     assert result.status.code == 400
   }
 
@@ -98,6 +82,14 @@ class TransactionsChainTest extends MongoDependentSpecification {
     handle chain, {
       uri 'untagged'
       method 'get'
+    }
+  }
+
+  private HandlingResult tagTransaction(String path, String content) {
+    handle chain, {
+      uri path
+      body content, 'application/json'
+      method 'put'
     }
   }
 
