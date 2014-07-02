@@ -2,9 +2,9 @@
 <Document xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02">
   <BkToCstmrStmt>
     <Stmt>
-      <Id>0479741549.2014-04-01</Id>
+      <Id>123456789.2014-04-01</Id>
       <Ntry>
-        <Amt Ccy="EUR">000000000000016.51</Amt>
+        <Amt Ccy="EUR">000000000001116.51</Amt>
         <CdtDbtInd>DBIT</CdtDbtInd>
         <Sts>BOOK</Sts>
         <BookgDt>
@@ -13,7 +13,7 @@
         <ValDt>
           <Dt>2014-04-01</Dt>
         </ValDt>
-        <AcctSvcrRef>GT025003442232800AE</AcctSvcrRef>
+        <AcctSvcrRef>dasf234322f</AcctSvcrRef>
         <BkTxCd>
           <Domn>
             <Cd>PMNT</Cd>
@@ -30,18 +30,18 @@
         <NtryDtls>
           <TxDtls>
             <Refs>
-              <AcctSvcrRef>GT025003442232800AE</AcctSvcrRef>
-              <EndToEndId>1011869289379713</EndToEndId>
-              <MndtId>FLVZ356201306081642056780002</MndtId>
+              <AcctSvcrRef>dsafadf121§2§</AcctSvcrRef>
+              <EndToEndId>§21§14§14§12§123</EndToEndId>
+              <MndtId>dfsaf12314124123</MndtId>
             </Refs>
             <AmtDtls>
               <TxAmt>
-                <Amt Ccy="EUR">000000000000016.51</Amt>
+                <Amt Ccy="EUR">000000000001116.51</Amt>
               </TxAmt>
             </AmtDtls>
             <RltdPties>
               <Cdtr>
-                <Nm>FLORIUS</Nm>
+                <Nm>DUMDUH</Nm>
                 <PstlAdr>
                   <Ctry>NL</Ctry>
                   <AdrLine>RUIMTEVAART 24</AdrLine>
@@ -50,7 +50,7 @@
                 <Id>
                   <PrvtId>
                     <Othr>
-                      <Id>NL42ZZZ080242850000</Id>
+                      <Id>NL1291jjsadfjlasdlkfja2</Id>
                       <SchmeNm>
                         <Prtry>SEPA</Prtry>
                       </SchmeNm>
@@ -60,7 +60,7 @@
               </Cdtr>
               <CdtrAcct>
                 <Id>
-                  <IBAN>NL10ABNA0499351045</IBAN>
+                  <IBAN>SOMEBAN123131</IBAN>
                 </Id>
               </CdtrAcct>
             </RltdPties>
@@ -77,11 +77,11 @@
               </CdtrAgt>
             </RltdAgts>
             <RmtInf>
-              <Ustrd>Kenmerk 1011.8692.8937.9713 Omschrijving PREMIE PER 01-04-2014 1 MND 58515223 Overlijdensrisico incasso</Ustrd>
+              <Ustrd>Kenmerk 234124124124131 Omschrijving PREMIE PER 01-04-2014 1 MND 212342 Overlijdensrisico incasso</Ustrd>
             </RmtInf>
           </TxDtls>
         </NtryDtls>
-        <AddtlNtryInf>/TRTP/SEPA Incasso algemeen doorlopend/CSID/NL42ZZZ080242850000 /NAME/Florius, Verzekeringen/MARF/FLVZ356201306081642056780002 /REMI/Kenmerk 1011.8692.8937.9713 Omschrijving PREMIE PER 01-04-2014 1 MND 58515223 Overlijdensrisico incasso/IBAN/NL10ABNA0499351045/BIC/ABNANL2A/EREF/1011869289379713</AddtlNtryInf>
+        <AddtlNtryInf>/TRTP/SEPA Incasso algemeen doorlopend/CSID/asdfasfsdf12131 /NAME/DUMDUH, Verzekeringen/MARF/asdfasdf12123212 /REMI/Kenmerk 123134141241 Omschrijving PREMIE PER 01-04-2014 1 MND 1213211 Overlijdensrisico incasso/IBAN/ASDsad1212dsaa/BIC/ABNANL2A/EREF/123124123131</AddtlNtryInf>
       </Ntry>
     </Stmt>
   </BkToCstmrStmt>

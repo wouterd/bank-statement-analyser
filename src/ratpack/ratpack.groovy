@@ -13,5 +13,9 @@ ratpack {
   handlers {
     prefix 'statements', registry.get(StatementsChain.class)
     prefix 'transactions', registry.get(TransactionsChain.class)
+
+    prefix 'app', {
+      assets 'app/dist', 'index.html'
+    }
   }
 }
